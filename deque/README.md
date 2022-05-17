@@ -6,7 +6,7 @@ The API is inspired by C++ [`std::deque`](https://en.cppreference.com/w/cpp/cont
 
 ### Example ###
 
-_For full code see [BFS](examples/bfs)_
+_For full code see [BFS](../examples/bfs)_
 
 ```Go
 // Tree models a classical binary tree
