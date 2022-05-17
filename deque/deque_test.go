@@ -418,7 +418,7 @@ func TestGet(t *testing.T) {
 			for i, e := range tt.elem {
 				g, err := q.Get(i)
 				require.NoError(t, err)
-				require.Equal(t, e, *g)
+				require.Equal(t, e, g)
 			}
 			for i := len(tt.elem); i < tt.howMany; i++ {
 				_, err := q.Get(i)

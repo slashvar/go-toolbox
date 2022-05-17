@@ -93,11 +93,7 @@ func (q *Deque[T]) PushFront(e T) {
 	if q.length == q.capacity {
 		q.grow()
 	}
-	if q.first == 0 {
-		q.first = q.capacity - 1
-	} else {
-		q.first = q.first - 1
-	}
+	q.first = (q.capacity + q.first - 1) % q.capacity
 	q.buffer[q.first] = e
 	q.length++
 }
@@ -151,9 +147,10 @@ func (q *Deque[T]) ShrinkToFit() {
 }
 
 // Get returns nth element if it exists
-func (q *Deque[T]) Get(n int) (*T, error) {
+func (q *Deque[T]) Get(n int) (T, error) {
+	var empty T
 	if n >= q.length {
-		return nil, NotEnoughElementsError{}
+		return empty, NotEnoughElementsError{}
 	}
-	return &q.buffer[(q.first+n)%q.capacity], nil
+	return q.buffer[(q.first+n)%q.capacity], nil
 }
