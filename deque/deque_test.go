@@ -172,7 +172,7 @@ func TestPopBack(t *testing.T) {
 			for i := 0; i < len(tt.elem); i++ {
 				e, err := q.Back()
 				require.NoError(t, err)
-				popElem = append(popElem, *e)
+				popElem = append(popElem, e)
 				require.NoError(t, q.PopBack())
 			}
 			require.Equal(t, len(tt.elem), len(popElem))
@@ -214,7 +214,7 @@ func TestPopFront(t *testing.T) {
 			for i := 0; i < len(tt.elem); i++ {
 				e, err := q.Front()
 				require.NoError(t, err)
-				popElem = append(popElem, *e)
+				popElem = append(popElem, e)
 				require.NoError(t, q.PopFront())
 			}
 			require.Equal(t, len(tt.elem), len(popElem))
@@ -242,8 +242,8 @@ func TestBFS(t *testing.T) {
 		cur, err := q.Front()
 		require.NoError(t, err)
 		require.NoError(t, q.PopFront())
-		res = append(res, tree[*cur])
-		left, right := children(*cur)
+		res = append(res, tree[cur])
+		left, right := children(cur)
 		if left < len(tree) {
 			q.PushBack(left)
 		}
@@ -266,8 +266,8 @@ func TestBFS2(t *testing.T) {
 		cur, err := q.Back()
 		require.NoError(t, err)
 		require.NoError(t, q.PopBack())
-		res = append(res, tree[*cur])
-		left, right := children(*cur)
+		res = append(res, tree[cur])
+		left, right := children(cur)
 		if left < len(tree) {
 			q.PushFront(left)
 		}
@@ -295,8 +295,8 @@ func TestDFS(t *testing.T) {
 		cur, err := q.Back()
 		require.NoError(t, err)
 		require.NoError(t, q.PopBack())
-		res = append(res, tree[*cur])
-		left, right := children(*cur)
+		res = append(res, tree[cur])
+		left, right := children(cur)
 		if right < len(tree) {
 			q.PushBack(right)
 		}
@@ -316,8 +316,8 @@ func TestDFS2(t *testing.T) {
 		cur, err := q.Front()
 		require.NoError(t, err)
 		require.NoError(t, q.PopFront())
-		res = append(res, tree[*cur])
-		left, right := children(*cur)
+		res = append(res, tree[cur])
+		left, right := children(cur)
 		if right < len(tree) {
 			q.PushFront(right)
 		}
@@ -342,11 +342,11 @@ func TestMixed(t *testing.T) {
 	for !q.IsEmpty() {
 		f, err := q.Front()
 		require.NoError(t, err)
-		front = append(front, *f)
+		front = append(front, f)
 		require.NoError(t, q.PopFront())
 		b, err := q.Back()
 		require.NoError(t, err)
-		back = append(back, *b)
+		back = append(back, b)
 		require.NoError(t, q.PopBack())
 	}
 	require.True(t, q.IsEmpty())
