@@ -14,9 +14,9 @@ func TestIsEmpty(t *testing.T) {
 		deque    *Deque[int]
 	}
 	cases := []testCases{
-		{name: "empty deque", expected: true, deque: NewDeque[int]()},
+		{name: "empty deque", expected: true, deque: New[int]()},
 		{name: "non empty deque", expected: false, deque: func() *Deque[int] {
-			q := NewDeque[int]()
+			q := New[int]()
 			q.buffer = append(q.buffer, 0)
 			q.capacity = len(q.buffer)
 			q.length = 1
@@ -31,7 +31,7 @@ func TestIsEmpty(t *testing.T) {
 }
 
 func buildDeque(first, capacity int, elem []int) *Deque[int] {
-	q := NewDeque[int]()
+	q := New[int]()
 	q.buffer = make([]int, capacity)
 	q.first = first
 	q.capacity = capacity
@@ -235,7 +235,7 @@ func TestBFS(t *testing.T) {
 	for i := 0; i < 63; i++ {
 		tree = append(tree, i)
 	}
-	q := NewDeque[int]()
+	q := New[int]()
 	q.PushBack(0)
 	var res []int
 	for !q.IsEmpty() {
@@ -259,7 +259,7 @@ func TestBFS2(t *testing.T) {
 	for i := 0; i < 63; i++ {
 		tree = append(tree, i)
 	}
-	q := NewDeque[int]()
+	q := New[int]()
 	q.PushFront(0)
 	var res []int
 	for !q.IsEmpty() {
@@ -288,7 +288,7 @@ func isSorted(v []int) bool {
 
 func TestDFS(t *testing.T) {
 	tree := []int{1, 2, 5, 3, 4, 6, 7}
-	q := NewDeque[int]()
+	q := New[int]()
 	q.PushBack(0)
 	var res []int
 	for !q.IsEmpty() {
@@ -309,7 +309,7 @@ func TestDFS(t *testing.T) {
 
 func TestDFS2(t *testing.T) {
 	tree := []int{1, 2, 5, 3, 4, 6, 7}
-	q := NewDeque[int]()
+	q := New[int]()
 	q.PushFront(0)
 	var res []int
 	for !q.IsEmpty() {
@@ -330,7 +330,7 @@ func TestDFS2(t *testing.T) {
 }
 
 func TestMixed(t *testing.T) {
-	q := NewDeque[int]()
+	q := New[int]()
 	for i := 0; i < 10; i++ {
 		q.PushFront(0)
 		q.PushBack(1)

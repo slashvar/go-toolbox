@@ -8,8 +8,8 @@ type Deque[T any] struct {
 	capacity int
 }
 
-// NewDeque[T] creates an empty Deque[T]
-func NewDeque[T any]() *Deque[T] {
+// New[T] creates an empty Deque[T]
+func New[T any]() *Deque[T] {
 	return &Deque[T]{
 		buffer:   nil,
 		first:    0,

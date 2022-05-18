@@ -60,7 +60,7 @@ func BFS(t *Tree) error {
 	if t == nil {
 		return nil
 	}
-	q := deque.NewDeque[*Tree]()
+	q := deque.New[*Tree]()
 	q.PushBack(t)
 	q.PushBack(nil)
 	for !q.IsEmpty() {
