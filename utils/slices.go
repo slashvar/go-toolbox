@@ -55,3 +55,12 @@ func Filter[T any](f func(T) bool, s []T) []T {
 	}
 	return r
 }
+
+// OptionalFilter returns the slice made of f(e) for all e in s such that f(e).HasValue() is true
+func OptionalFilter[T1, T2 any](f func(T1) Option[T2], s []T1) []T2 {
+	acc := func(r []T2, e T1) []T2 {
+		_ = OptionalDo(f(e), func(x T2) { r = append(r, x) })
+		return r
+	}
+	return Accumulate(acc, []T2{}, s)
+}

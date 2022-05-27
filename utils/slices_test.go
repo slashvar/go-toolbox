@@ -183,3 +183,49 @@ func TestFilter(t *testing.T) {
 		})
 	}
 }
+
+func TestOptionalFilter(t *testing.T) {
+	type testCases struct {
+		input  []int
+		output []int
+		f      func(int) Option[int]
+		name   string
+	}
+	even := func(i int) Option[int] {
+		if i%2 == 0 {
+			return NewOption(i / 2)
+		}
+		return NilOption[int]()
+	}
+	cases := []testCases{
+		{
+			input:  []int{},
+			output: []int{},
+			f:      even,
+			name:   "empty slice",
+		},
+		{
+			input:  buildSlice(10, 1),
+			output: buildSlice(5, 1),
+			f:      even,
+			name:   "slice of half value",
+		},
+	}
+	eq := func(a, b []int) bool {
+		if len(a) != len(b) {
+			return false
+		}
+		for i := range a {
+			if a[i] != b[i] {
+				return false
+			}
+		}
+		return true
+	}
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := OptionalFilter(tt.f, tt.input)
+			require.True(t, eq(tt.output, r))
+		})
+	}
+}
