@@ -47,13 +47,13 @@ func Exists[T any](f func(T) bool, s []T) bool {
 
 // Filter returns all the elements of s for which f returns true
 func Filter[T any](f func(T) bool, s []T) []T {
-	var r []T
-	for _, e := range s {
+	acc := func(r []T, e T) []T {
 		if f(e) {
-			r = append(r, e)
+			return append(r, e)
 		}
+		return r
 	}
-	return r
+	return Accumulate(acc, []T{}, s)
 }
 
 // OptionalFilter returns the slice made of f(e) for all e in s such that f(e).HasValue() is true
