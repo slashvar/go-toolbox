@@ -75,3 +75,37 @@ func TestOptionalFlatMap(t *testing.T) {
 		require.Equal(t, 42, r2.Value())
 	})
 }
+
+func TestElse(t *testing.T) {
+	t.Run("OptionalElse call on non nil optional", func(t *testing.T) {
+		b := false
+		f := func() { b = true }
+		r := OptionalElse[int](NewOption(42), f)
+		require.False(t, b)
+		require.True(t, r.HasValue())
+	})
+	t.Run("OptionalElse call on nil optional", func(t *testing.T) {
+		b := false
+		f := func() { b = true }
+		r := OptionalElse[int](NilOption[int](), f)
+		require.True(t, b)
+		require.False(t, r.HasValue())
+	})
+}
+
+func TestDo(t *testing.T) {
+	t.Run("OptionalDo call on non nil optional", func(t *testing.T) {
+		b := false
+		f := func(int) { b = true }
+		r := OptionalDo[int](NewOption(42), f)
+		require.True(t, b)
+		require.True(t, r.HasValue())
+	})
+	t.Run("OptionalDo call on nil optional", func(t *testing.T) {
+		b := false
+		f := func(int) { b = true }
+		r := OptionalDo[int](NilOption[int](), f)
+		require.False(t, b)
+		require.False(t, r.HasValue())
+	})
+}
