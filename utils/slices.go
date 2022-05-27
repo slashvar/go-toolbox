@@ -29,7 +29,7 @@ func Accumulate[InType, OutType any](f func(OutType, InType) OutType, init OutTy
 // ForAll returns true if f applies to all elements of s returns true
 func ForAll[T any](f func(T) bool, s []T) bool {
 	r := true
-	for i := 0; i < len(s) && f(s[i]); i++ {
+	for i := 0; i < len(s) && r; i++ {
 		r = r && f(s[i])
 	}
 	return r
