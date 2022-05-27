@@ -184,6 +184,46 @@ func TestFilter(t *testing.T) {
 	}
 }
 
+func TestReverse(t *testing.T) {
+	equalRev := func(s1, s2 []int) bool {
+		if len(s1) != len(s2) {
+			return false
+		}
+		for i := range s1 {
+			if s1[i] != s2[len(s2)-i-1] {
+				return false
+			}
+		}
+		return true
+	}
+	type testCase struct {
+		name string
+		in   []int
+	}
+	cases := []testCase{
+		{
+			name: "reverse empty slice",
+			in:   []int{},
+		},
+		{
+			name: "reverse even length slice",
+			in:   buildSlice(10, 1),
+		},
+		{
+			name: "reverse odd length slice",
+			in:   buildSlice(11, 1),
+		},
+	}
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := make([]int, len(tt.in))
+			copy(r, tt.in)
+			Reverse(r)
+			require.True(t, equalRev(tt.in, r))
+		})
+	}
+}
+
 func TestOptionalFilter(t *testing.T) {
 	type testCases struct {
 		input  []int
@@ -226,6 +266,58 @@ func TestOptionalFilter(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := OptionalFilter(tt.f, tt.input)
 			require.True(t, eq(tt.output, r))
+		})
+	}
+}
+
+func TestInsert(t *testing.T) {
+	type testCase struct {
+		name  string
+		in    []int
+		value int
+		pos   int
+	}
+	cases := []testCase{
+		{
+			name:  "insert in empty slice",
+			in:    []int{},
+			value: 0,
+			pos:   0,
+		},
+		{
+			name:  "insert in front",
+			in:    buildSlice(10, 1),
+			value: 42,
+			pos:   0,
+		},
+		{
+			name:  "insert at back",
+			in:    buildSlice(10, 1),
+			value: 42,
+			pos:   9,
+		},
+		{
+			name:  "insert in the middle",
+			in:    buildSlice(10, 1),
+			value: 42,
+			pos:   5,
+		},
+		{
+			name:  "insert too far",
+			in:    buildSlice(10, 1),
+			value: 42,
+			pos:   20,
+		},
+	}
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := Insert(tt.value, tt.pos, tt.in)
+			require.Equal(t, len(tt.in)+1, len(r))
+			if tt.pos < len(r) {
+				require.Equal(t, tt.value, r[tt.pos])
+				return
+			}
+			require.Equal(t, tt.value, r[len(r)-1])
 		})
 	}
 }

@@ -1,5 +1,7 @@
 package utils
 
+import "golang.org/x/exp/constraints"
+
 // Map converts a slice of InType into a slice of OutType using function f
 func Map[InType, OutType any](in []InType, f func(InType) OutType) []OutType {
 	r := make([]OutType, 0, len(in))
@@ -63,4 +65,42 @@ func OptionalFilter[T1, T2 any](f func(T1) Option[T2], s []T1) []T2 {
 		return r
 	}
 	return Accumulate(acc, []T2{}, s)
+}
+
+// Reverse reverse elements in s
+func Reverse[T any](s []T) {
+	for i := 0; i < len(s)/2; i++ {
+		s[i], s[len(s)-i-1] = s[len(s)-i-1], s[i]
+	}
+}
+
+// Insert inserts x as position pos in s
+// if pos >= len(s) insert at the end of s
+// panic if pos is less than 0
+func Insert[T any](x T, pos int, s []T) []T {
+	if pos < 0 {
+		panic("inserting at a negative position")
+	}
+	s = append(s, x)
+	for i := len(s) - 1; i > pos; i-- {
+		s[i], s[i-1] = s[i-1], s[i]
+	}
+	return s
+}
+
+// LowerBound returns the position of the first elements that is not smaller than x
+func LowerBound[T constraints.Ordered](x T, s []T) int {
+	left, right := 0, len(s)
+	for left < right {
+		mid := left + (right-left)/2
+		if s[mid] == x {
+			return mid
+		}
+		if x < s[mid] {
+			right = mid
+			continue
+		}
+		left = mid + 1
+	}
+	return left
 }
