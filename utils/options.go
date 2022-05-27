@@ -3,6 +3,8 @@ package utils
 type Option[T any] interface {
 	HasValue() bool
 	Value() T
+	Do(func(T)) Option[T]
+	Else(func()) Option[T]
 }
 
 // OptionImplem model an optional value
@@ -33,6 +35,22 @@ func (o *OptionImplem[T]) Value() T {
 	return o.content
 }
 
+// Do calls f(o.Value()) if o is not empty and returns o in all cases
+func (o *OptionImplem[T]) Do(f func(T)) Option[T] {
+	if o.HasValue() {
+		f(o.Value())
+	}
+	return o
+}
+
+// Else calls f if o is empty and returns o in all cases
+func (o *OptionImplem[T]) Else(f func()) Option[T] {
+	if !o.HasValue() {
+		f()
+	}
+	return o
+}
+
 // OptionalMap returns an option value result from f(o.Value()) if o is not empty, returns an empty optional otherwise
 func OptionalMap[T1, T2 any](o Option[T1], f func(T1) T2) Option[T2] {
 	if o.HasValue() {
@@ -52,16 +70,10 @@ func OptionalFlatMap[T1, T2 any](o Option[T1], f func(T1) Option[T2]) Option[T2]
 
 // OptionalElse calls f if o is empty and returns o in all cases
 func OptionalElse[T any](o Option[T], f func()) Option[T] {
-	if !o.HasValue() {
-		f()
-	}
-	return o
+	return o.Else(f)
 }
 
 // OptionalDo calls f(o.Value()) if o is not empty and returns o in all cases
 func OptionalDo[T any](o Option[T], f func(T)) Option[T] {
-	if o.HasValue() {
-		f(o.Value())
-	}
-	return o
+	return o.Do(f)
 }
