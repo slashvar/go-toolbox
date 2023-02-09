@@ -1,4 +1,4 @@
-module go-toolbox
+module github.com/slashvar/go-toolbox
 
 go 1.18
 
