@@ -16,13 +16,13 @@ func buildSlice(n, step int) []int {
 }
 
 func TestMap(t *testing.T) {
-	type testCases[T, U any] struct {
-		input  []T
-		output []U
-		f      func(T) U
+	type testCases struct {
+		input  []int
+		output []int
+		f      func(int) int
 		name   string
 	}
-	cases := []testCases[int, int]{
+	cases := []testCases{
 		{
 			input:  []int{},
 			output: []int{},
@@ -437,7 +437,7 @@ func TestPartition(t *testing.T) {
 	}
 }
 
-func TestPartitionFilter(t *testing.T) {
+func TestPartitionFunc(t *testing.T) {
 	type testCase struct {
 		name      string
 		in        []int
@@ -472,7 +472,7 @@ func TestPartitionFilter(t *testing.T) {
 	}
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			p := PartitionFilter(tt.predicate, tt.in)
+			p := PartitionFunc(tt.predicate, tt.in)
 			require.LessOrEqual(t, p, len(tt.in))
 			for _, e := range tt.in[:p] {
 				require.True(t, tt.predicate(e))

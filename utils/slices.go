@@ -5,7 +5,7 @@ import (
 )
 
 // Map converts a slice of InType into a slice of OutType using function f
-func Map[InType, OutType any](in []InType, f func(InType) OutType) []OutType {
+func Map[SIn ~[]InType, InType any, OutType any](in SIn, f func(InType) OutType) []OutType {
 	r := make([]OutType, 0, len(in))
 	for _, e := range in {
 		r = append(r, f(e))
@@ -14,7 +14,7 @@ func Map[InType, OutType any](in []InType, f func(InType) OutType) []OutType {
 }
 
 // Iter applies f to all elements of s
-func Iter[T any](s []T, f func(T)) {
+func Iter[S ~[]T, T any](s S, f func(T)) {
 	for _, e := range s {
 		f(e)
 	}
@@ -22,7 +22,7 @@ func Iter[T any](s []T, f func(T)) {
 
 // Accumulate traverses s and accumulates results of function f with initial value init
 // Accumulate(f, init, {a1, ..., bn}) -> f( ... f(f(init, a1), a2) ..., an)
-func Accumulate[InType, OutType any](f func(OutType, InType) OutType, init OutType, s []InType) OutType {
+func Accumulate[SIn ~[]InType, InType, OutType any](f func(OutType, InType) OutType, init OutType, s SIn) OutType {
 	r := init
 	for _, e := range s {
 		r = f(r, e)
@@ -31,7 +31,7 @@ func Accumulate[InType, OutType any](f func(OutType, InType) OutType, init OutTy
 }
 
 // ForAll returns true if f applies to all elements of s returns true
-func ForAll[T any](f func(T) bool, s []T) bool {
+func ForAll[S ~[]T, T any](f func(T) bool, s S) bool {
 	r := true
 	for i := 0; i < len(s) && r; i++ {
 		r = r && f(s[i])
@@ -40,7 +40,7 @@ func ForAll[T any](f func(T) bool, s []T) bool {
 }
 
 // Exists returns true if f returns true for at least one elements of s
-func Exists[T any](f func(T) bool, s []T) bool {
+func Exists[S ~[]T, T any](f func(T) bool, s S) bool {
 	for _, e := range s {
 		if f(e) {
 			return true
@@ -50,7 +50,7 @@ func Exists[T any](f func(T) bool, s []T) bool {
 }
 
 // Filter returns all the elements of s for which f returns true
-func Filter[T any](f func(T) bool, s []T) []T {
+func Filter[S ~[]T, T any](f func(T) bool, s S) []T {
 	acc := func(r []T, e T) []T {
 		if f(e) {
 			return append(r, e)
@@ -61,7 +61,7 @@ func Filter[T any](f func(T) bool, s []T) []T {
 }
 
 // OptionalFilter returns the slice made of f(e) for all e in s such that f(e).HasValue() is true
-func OptionalFilter[T1, T2 any](f func(T1) Option[T2], s []T1) []T2 {
+func OptionalFilter[S1 ~[]T1, T1, T2 any](f func(T1) Option[T2], s S1) []T2 {
 	acc := func(r []T2, e T1) []T2 {
 		f(e).Do(func(x T2) { r = append(r, x) })
 		return r
@@ -70,7 +70,7 @@ func OptionalFilter[T1, T2 any](f func(T1) Option[T2], s []T1) []T2 {
 }
 
 // Reverse reverse elements in s
-func Reverse[T any](s []T) {
+func Reverse[S ~[]T, T any](s S) {
 	for i := 0; i < len(s)/2; i++ {
 		s[i], s[len(s)-i-1] = s[len(s)-i-1], s[i]
 	}
@@ -79,7 +79,7 @@ func Reverse[T any](s []T) {
 // Insert inserts x as position pos in s
 // if pos >= len(s) insert at the end of s
 // panic if pos is less than 0
-func Insert[T any](x T, pos int, s []T) []T {
+func Insert[S ~[]T, T any](x T, pos int, s S) S {
 	if pos < 0 {
 		panic("inserting at a negative position")
 	}
@@ -92,7 +92,7 @@ func Insert[T any](x T, pos int, s []T) []T {
 
 // LowerBound returns the position of the first elements that is not smaller than x
 // LowerBound returns a coherent result only if s is sorted
-func LowerBound[T constraints.Ordered](x T, s []T) int {
+func LowerBound[S ~[]T, T constraints.Ordered](x T, s S) int {
 	left, right := 0, len(s)
 	for left < right {
 		mid := left + (right-left)/2
@@ -110,7 +110,7 @@ func LowerBound[T constraints.Ordered](x T, s []T) int {
 
 // Partition moves elements to form a partition and returns the position of the pivot
 // Let p := Partition(x, s) then for all i < p s[i] < x and for all i >= p, s[i] >= x
-func Partition[T constraints.Ordered](x T, s []T) int {
+func Partition[S ~[]T, T constraints.Ordered](x T, s S) int {
 	pivot := 0
 	for i := 0; i < len(s); i++ {
 		if s[i] < x {
@@ -121,9 +121,9 @@ func Partition[T constraints.Ordered](x T, s []T) int {
 	return pivot
 }
 
-// PartitionFilter moves elements to form a partition w.r.t to f
-// Let p := PartitionFilter(f, s) then for all i < p, f([i]) is true and for all i >= p f(s[i]) is false
-func PartitionFilter[T any](f func(T) bool, s []T) int {
+// PartitionFunc moves elements to form a partition w.r.t to f
+// Let p := PartitionFunc(f, s) then for all i < p, f([i]) is true and for all i >= p f(s[i]) is false
+func PartitionFunc[S ~[]T, T any](f func(T) bool, s S) int {
 	pivot := 0
 	for i := 0; i < len(s); i++ {
 		if f(s[i]) {
@@ -136,7 +136,7 @@ func PartitionFilter[T any](f func(T) bool, s []T) int {
 
 // Combine combines elements of s1 and s2 using zipper function
 // returned slice of the length of the smallest input
-func Combine[T1, T2, T3 any](s1 []T1, s2 []T2, zipper func(T1, T2) T3) []T3 {
+func Combine[S1 ~[]T1, S2 ~[]T2, T1, T2, T3 any](s1 S1, s2 S2, zipper func(T1, T2) T3) []T3 {
 	var r []T3
 	for i := 0; i < len(s1) && i < len(s2); i++ {
 		r = append(r, zipper(s1[i], s2[i]))
