@@ -143,3 +143,17 @@ func Combine[S1 ~[]T1, S2 ~[]T2, T1, T2, T3 any](s1 S1, s2 S2, zipper func(T1, T
 	}
 	return r
 }
+
+// Remove moves elements returns false to pred at the end of the slice and return the position of the first moved element
+// Preserve the relative order of untouched elements
+// Linear time complexity (if pred is constant time) and constant space complexity (no extra allocation)
+func Remove[S ~[]T, T any](s S, pred func(T) bool) int {
+	end := 0
+	for i := range s {
+		if pred(s[i]) {
+			s[i], s[end] = s[end], s[i]
+			end++
+		}
+	}
+	return end
+}

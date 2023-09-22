@@ -524,3 +524,87 @@ func TestCombine(t *testing.T) {
 		})
 	}
 }
+
+func check(t *testing.T, list []int, end int, pred func(int) bool) {
+	t.Helper()
+	for i := 0; i < len(list) && i < end; i++ {
+		require.True(t, pred(list[i]))
+	}
+	for i := end; i < len(list); i++ {
+		require.False(t, pred(list[i]))
+	}
+}
+
+func TestRemove(t *testing.T) {
+	type testCase struct {
+		name     string
+		input    []int
+		pred     func(int) bool
+		expected []int
+		end      int
+	}
+	cases := []testCase{
+		{
+			name:  "empty list",
+			input: []int{},
+			pred: func(int) bool {
+				return true
+			},
+			expected: []int{},
+		},
+		{
+			name:  "nominal case: remove odd",
+			input: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			pred: func(i int) bool {
+				return i%2 == 0
+			},
+			expected: []int{2, 4, 6, 8, 10, 3, 7, 1, 9, 5},
+			end:      5,
+		},
+		{
+			name:  "remove all",
+			input: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			pred: func(int) bool {
+				return false
+			},
+			expected: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			end:      0,
+		},
+		{
+			name:  "remove none",
+			input: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			pred: func(int) bool {
+				return true
+			},
+			expected: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			end:      10,
+		},
+		{
+			name:  "remove without changes",
+			input: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			pred: func(i int) bool {
+				return i < 6
+			},
+			expected: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			end:      5,
+		},
+		{
+			name:  "swap partition",
+			input: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+			pred: func(i int) bool {
+				return i > 5
+			},
+			expected: []int{6, 7, 8, 9, 10, 1, 2, 3, 4, 5},
+			end:      5,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			end := Remove(tc.input, tc.pred)
+			require.Equal(t, tc.expected, tc.input)
+			require.Equal(t, tc.end, end)
+			check(t, tc.input, end, tc.pred)
+		})
+	}
+}
