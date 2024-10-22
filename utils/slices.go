@@ -157,3 +157,19 @@ func Remove[S ~[]T, T any](s S, pred func(T) bool) int {
 	}
 	return end
 }
+
+// Mismatch finds the first position where two slices differ
+func Mismatch[S ~[]T, T comparable](s1, s2 S) int {
+	return MismatchFunc(s1, s2, func(t1, t2 T) bool { return t1 == t2 })
+}
+
+// MismatchFunc finds the first position where two slices differ w.r.t. pred function
+func MismatchFunc[S ~[]T, T any](s1, s2 S, pred func(T, T) bool) int {
+	i := 0
+	for ; i < len(s1) && i < len(s2); i++ {
+		if !pred(s1[i], s2[i]) {
+			return i
+		}
+	}
+	return i
+}

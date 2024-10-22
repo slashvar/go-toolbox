@@ -2,6 +2,7 @@ package utils
 
 import (
 	"math/rand"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -605,6 +606,103 @@ func TestRemove(t *testing.T) {
 			require.Equal(t, tc.expected, tc.input)
 			require.Equal(t, tc.end, end)
 			check(t, tc.input, end, tc.pred)
+		})
+	}
+}
+
+func TestMismatch(t *testing.T) {
+	type testCase struct {
+		name     string
+		input1   []int
+		input2   []int
+		expected int
+	}
+	cases := []testCase{
+		{
+			name:     "both empty",
+			input1:   []int{},
+			input2:   []int{},
+			expected: 0,
+		},
+		{
+			name:     "equal slices",
+			input1:   []int{1, 2, 3},
+			input2:   []int{1, 2, 3},
+			expected: 3,
+		},
+		{
+			name:     "fully different slices",
+			input1:   []int{1, 2, 3},
+			input2:   []int{4, 5, 6},
+			expected: 0,
+		},
+		{
+			name:     "canonical case",
+			input1:   []int{1, 2, 3},
+			input2:   []int{1, 2, 4},
+			expected: 2,
+		},
+		{
+			name:     "prefix slice",
+			input1:   []int{1, 2, 3, 4, 5},
+			input2:   []int{1, 2, 3},
+			expected: 3,
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			res := Mismatch(tc.input1, tc.input2)
+			require.Equal(t, tc.expected, res)
+		})
+	}
+}
+
+func TestMismatchFunc(t *testing.T) {
+	type testCase struct {
+		name     string
+		input1   []string
+		input2   []string
+		expected int
+	}
+	eq := func(str1, str2 string) bool {
+		return strings.EqualFold(str1, str2)
+	}
+	cases := []testCase{
+		{
+			name:     "empty slices",
+			input1:   []string{},
+			input2:   []string{},
+			expected: 0,
+		},
+		{
+			name:     "equal slices",
+			input1:   []string{"a", "b", "c"},
+			input2:   []string{"A", "b", "C"},
+			expected: 3,
+		},
+		{
+			name:     "fully different slices",
+			input1:   []string{"a", "B", "c"},
+			input2:   []string{"d", "E", "f"},
+			expected: 0,
+		},
+		{
+			name:     "canonical case",
+			input1:   []string{"a", "b", "c"},
+			input2:   []string{"a", "B", "D"},
+			expected: 2,
+		},
+		{
+			name:     "prefix slice",
+			input1:   []string{"a", "b", "c"},
+			input2:   []string{"A", "B", "C", "D", "E", "F"},
+			expected: 3,
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			res := MismatchFunc(tc.input1, tc.input2, eq)
+			require.Equal(t, tc.expected, res)
 		})
 	}
 }
