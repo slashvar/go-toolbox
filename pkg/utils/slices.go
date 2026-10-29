@@ -90,16 +90,13 @@ func Insert[T any](x T, pos int, s []T) []T {
 	return s
 }
 
-// LowerBound returns the position of the first elements that is not smaller than x
+// LowerBound returns the position of the first element that is not smaller than x
 // LowerBound returns a coherent result only if s is sorted
 func LowerBound[T cmp.Ordered](x T, s []T) int {
 	left, right := 0, len(s)
 	for left < right {
 		mid := left + (right-left)/2
-		if s[mid] == x {
-			return mid
-		}
-		if x < s[mid] {
+		if x <= s[mid] {
 			right = mid
 			continue
 		}
