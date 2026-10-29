@@ -28,6 +28,7 @@ Functions taking a predicate or accumulator receive it first, before the slice.
 
 Notes:
 
+- Slice parameters use `S ~[]T`, so named slice types work. `Filter` and `Insert` return the same type as their input.
 - `Insert`, `Reverse`, `Partition` and `PartitionFilter` modify the slice in place. `Partition` and `PartitionFilter` do not preserve order.
 - `LowerBound` returns an undefined result on an unsorted slice. With duplicates, it returns the first matching index.
 - `LowerBound` and `Partition` accept any `cmp.Ordered` type.

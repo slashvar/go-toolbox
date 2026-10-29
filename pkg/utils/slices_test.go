@@ -530,3 +530,21 @@ func TestCombine(t *testing.T) {
 		})
 	}
 }
+
+type ints []int
+
+func TestNamedSliceTypes(t *testing.T) {
+	s := ints{3, 1, 2}
+	filtered := Filter(func(x int) bool { return x > 1 }, s)
+	require.IsType(t, ints{}, filtered)
+	require.Equal(t, ints{3, 2}, filtered)
+	inserted := Insert(9, 1, s)
+	require.IsType(t, ints{}, inserted)
+	require.Equal(t, ints{3, 9, 1, 2}, inserted)
+	Reverse(s)
+	require.Equal(t, ints{2, 1, 3}, s)
+	require.True(t, Exists(func(x int) bool { return x == 3 }, s))
+	require.Equal(t, 6, Accumulate(func(a, x int) int { return a + x }, 0, s))
+	require.Equal(t, []int{4, 2, 6}, Map(s, func(x int) int { return 2 * x }))
+	require.Equal(t, 1, LowerBound(2, ints{1, 2, 3}))
+}
