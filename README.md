@@ -1,6 +1,6 @@
 # go-toolbox
 
-Small generic Go packages: a double-ended queue and slice/option helpers.
+Small generic Go packages: a double-ended queue, slice/option helpers and an iterator adapter.
 
 ## Install
 
@@ -12,11 +12,12 @@ Requires Go 1.25 or later.
 
 ## Packages
 
-| Path                           | Content                                    |
-|--------------------------------|--------------------------------------------|
-| [`pkg/deque`](pkg/deque)       | Ring-buffer double-ended queue             |
-| [`pkg/utils`](pkg/utils)       | Generic slice helpers and an optional type |
-| [`examples/bfs`](examples/bfs) | Breadth-first tree traversal using `deque` |
+| Path                                       | Content                                    |
+|--------------------------------------------|--------------------------------------------|
+| [`pkg/brokeniterator`](pkg/brokeniterator) | `Next`-style iterators to `iter.Seq`       |
+| [`pkg/deque`](pkg/deque)                   | Ring-buffer double-ended queue             |
+| [`pkg/utils`](pkg/utils)                   | Generic slice helpers and an optional type |
+| [`examples/bfs`](examples/bfs)             | Breadth-first tree traversal using `deque` |
 
 ## Development
 
