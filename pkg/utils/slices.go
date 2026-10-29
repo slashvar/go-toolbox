@@ -70,9 +70,7 @@ func OptionalFilter[S ~[]T1, T1, T2 any](f func(T1) Option[T2], s S) []T2 {
 
 // Reverse reverse elements in s
 func Reverse[S ~[]T, T any](s S) {
-	for i := 0; i < len(s)/2; i++ {
-		s[i], s[len(s)-i-1] = s[len(s)-i-1], s[i]
-	}
+	slices.Reverse(s)
 }
 
 // Insert inserts x as position pos in s
@@ -92,16 +90,8 @@ func Insert[S ~[]T, T any](x T, pos int, s S) S {
 // LowerBound returns the position of the first element that is not smaller than x
 // LowerBound returns a coherent result only if s is sorted
 func LowerBound[S ~[]T, T cmp.Ordered](x T, s S) int {
-	left, right := 0, len(s)
-	for left < right {
-		mid := left + (right-left)/2
-		if x <= s[mid] {
-			right = mid
-			continue
-		}
-		left = mid + 1
-	}
-	return left
+	pos, _ := slices.BinarySearch(s, x)
+	return pos
 }
 
 // Partition moves elements to form a partition and returns the position of the pivot
