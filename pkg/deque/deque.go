@@ -48,7 +48,7 @@ func (q *Deque[T]) grow() {
 // resize resizes the internal buffer, keep only the n first elements
 func (q *Deque[T]) resize(n int) {
 	newBuffer := make([]T, n)
-	for i := 0; i < n && i < q.length; i++ {
+	for i := range min(n, q.length) {
 		newBuffer[i] = q.buffer[(q.first+i)%q.capacity]
 	}
 	q.buffer = newBuffer

@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/slashvar/go-toolbox/pkg/deque"
 	"log"
+
+	"github.com/slashvar/go-toolbox/pkg/deque"
 )
 
 /*

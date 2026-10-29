@@ -232,7 +232,7 @@ func children(i int) (int, int) {
 
 func TestBFS(t *testing.T) {
 	var tree []int
-	for i := 0; i < 63; i++ {
+	for i := range 63 {
 		tree = append(tree, i)
 	}
 	q := New[int]()
@@ -256,7 +256,7 @@ func TestBFS(t *testing.T) {
 
 func TestBFS2(t *testing.T) {
 	var tree []int
-	for i := 0; i < 63; i++ {
+	for i := range 63 {
 		tree = append(tree, i)
 	}
 	q := New[int]()
@@ -331,7 +331,7 @@ func TestDFS2(t *testing.T) {
 
 func TestMixed(t *testing.T) {
 	q := New[int]()
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		q.PushFront(0)
 		q.PushBack(1)
 	}
