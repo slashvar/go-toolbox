@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"golang.org/x/exp/constraints"
+	"cmp"
 )
 
 // Map converts a slice of InType into a slice of OutType using function f
@@ -92,7 +92,7 @@ func Insert[T any](x T, pos int, s []T) []T {
 
 // LowerBound returns the position of the first elements that is not smaller than x
 // LowerBound returns a coherent result only if s is sorted
-func LowerBound[T constraints.Ordered](x T, s []T) int {
+func LowerBound[T cmp.Ordered](x T, s []T) int {
 	left, right := 0, len(s)
 	for left < right {
 		mid := left + (right-left)/2
@@ -110,7 +110,7 @@ func LowerBound[T constraints.Ordered](x T, s []T) int {
 
 // Partition moves elements to form a partition and returns the position of the pivot
 // Let p := Partition(x, s) then for all i < p s[i] < x and for all i >= p, s[i] >= x
-func Partition[T constraints.Ordered](x T, s []T) int {
+func Partition[T cmp.Ordered](x T, s []T) int {
 	pivot := 0
 	for i := 0; i < len(s); i++ {
 		if s[i] < x {
