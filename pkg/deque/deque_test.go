@@ -420,6 +420,8 @@ func TestGet(t *testing.T) {
 				require.NoError(t, err)
 				require.Equal(t, e, g)
 			}
+			_, err := q.Get(-1)
+			require.ErrorIs(t, err, NotEnoughElementsError{})
 			for i := len(tt.elem); i < tt.howMany; i++ {
 				_, err := q.Get(i)
 				require.Error(t, err)

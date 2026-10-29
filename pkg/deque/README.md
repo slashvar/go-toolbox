@@ -18,7 +18,7 @@ import "github.com/slashvar/go-toolbox/pkg/deque"
 | `PushFront(e)`  | Prepends `e` at the front                                         |
 | `Back()`        | Returns the back element                                          |
 | `Front()`       | Returns the front element                                         |
-| `Get(n)`        | Returns the `n`th element from the front, `n` must be at least 0  |
+| `Get(n)`        | Returns the `n`th element from the front                          |
 | `PopBack()`     | Removes the back element                                          |
 | `PopFront()`    | Removes the front element                                         |
 | `Size()`        | Returns the number of elements                                    |
@@ -26,7 +26,7 @@ import "github.com/slashvar/go-toolbox/pkg/deque"
 | `Clear()`       | Removes all elements and keeps the allocated buffer               |
 | `ShrinkToFit()` | Shrinks the buffer when its capacity is at least 4 times the size |
 
-`Back`, `Front`, `Get`, `PopBack` and `PopFront` return `NotEnoughElementsError` when the deque is empty or `n` is past the last element.
+`Back`, `Front`, `Get`, `PopBack` and `PopFront` return `NotEnoughElementsError` when the deque is empty or `n` is out of range.
 
 Pushes run in amortized constant time. The buffer doubles when full.
 

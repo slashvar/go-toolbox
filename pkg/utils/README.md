@@ -10,26 +10,26 @@ import "github.com/slashvar/go-toolbox/pkg/utils"
 
 Functions taking a predicate or accumulator receive it first, before the slice.
 
-| Function                 | Description                                                               |
-|--------------------------|---------------------------------------------------------------------------|
-| `Map(in, f)`             | Returns a new slice of `f(e)` for each `e` in `in`                        |
-| `Iter(s, f)`             | Calls `f` on each element                                                 |
-| `Accumulate(f, init, s)` | Left fold: `f(...f(f(init, s[0]), s[1])..., s[n])`                        |
-| `ForAll(f, s)`           | Reports whether `f` holds for every element                               |
-| `Exists(f, s)`           | Reports whether `f` holds for at least one element                        |
-| `Filter(f, s)`           | Returns the elements for which `f` holds                                  |
-| `OptionalFilter(f, s)`   | Returns the values of the non-empty options `f(e)`                        |
-| `Reverse(s)`             | Reverses `s` in place                                                     |
-| `Insert(x, pos, s)`      | Inserts `x` at `pos`, appends when `pos >= len(s)`, panics when `pos < 0` |
-| `LowerBound(x, s)`       | Binary search in a sorted `s`, returns the insertion position of `x`      |
-| `Partition(x, s)`        | Moves elements smaller than `x` first and returns the split index         |
-| `PartitionFilter(f, s)`  | Moves elements satisfying `f` first and returns the split index           |
-| `Combine(s1, s2, zip)`   | Returns `zip(s1[i], s2[i])` over the shorter length                       |
+| Function                 | Description                                                                                |
+|--------------------------|--------------------------------------------------------------------------------------------|
+| `Map(in, f)`             | Returns a new slice of `f(e)` for each `e` in `in`                                         |
+| `Iter(s, f)`             | Calls `f` on each element                                                                  |
+| `Accumulate(f, init, s)` | Left fold: `f(...f(f(init, s[0]), s[1])..., s[n])`                                         |
+| `ForAll(f, s)`           | Reports whether `f` holds for every element                                                |
+| `Exists(f, s)`           | Reports whether `f` holds for at least one element                                         |
+| `Filter(f, s)`           | Returns the elements for which `f` holds                                                   |
+| `OptionalFilter(f, s)`   | Returns the values of the non-empty options `f(e)`                                         |
+| `Reverse(s)`             | Reverses `s` in place                                                                      |
+| `Insert(x, pos, s)`      | Inserts `x` at `pos`, appends when `pos >= len(s)`, panics when `pos < 0`                  |
+| `LowerBound(x, s)`       | Binary search in a sorted `s`, returns the index of the first element not smaller than `x` |
+| `Partition(x, s)`        | Moves elements smaller than `x` first and returns the split index                          |
+| `PartitionFilter(f, s)`  | Moves elements satisfying `f` first and returns the split index                            |
+| `Combine(s1, s2, zip)`   | Returns `zip(s1[i], s2[i])` over the shorter length                                        |
 
 Notes:
 
 - `Insert`, `Reverse`, `Partition` and `PartitionFilter` modify the slice in place. `Partition` and `PartitionFilter` do not preserve order.
-- `LowerBound` returns an undefined result on an unsorted slice. With duplicates, it may return any matching index.
+- `LowerBound` returns an undefined result on an unsorted slice. With duplicates, it returns the first matching index.
 - `LowerBound` and `Partition` accept any `cmp.Ordered` type.
 
 ## Options

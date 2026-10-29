@@ -59,7 +59,7 @@ func (q *Deque[T]) resize(n int) {
 	}
 }
 
-// Back returns a pointer to the element at the back of the queue
+// Back returns the element at the back of the queue
 // returns NotEnoughElementsError if the deque is empty
 func (q *Deque[T]) Back() (T, error) {
 	if q.IsEmpty() {
@@ -69,7 +69,7 @@ func (q *Deque[T]) Back() (T, error) {
 	return q.buffer[(q.first+q.length-1)%q.capacity], nil
 }
 
-// Front returns a pointer to the element at the front of the queue
+// Front returns the element at the front of the queue
 // returns NotEnoughElementsError if the deque is empty
 func (q *Deque[T]) Front() (T, error) {
 	if q.IsEmpty() {
@@ -147,9 +147,10 @@ func (q *Deque[T]) ShrinkToFit() {
 }
 
 // Get returns nth element if it exists
+// returns NotEnoughElementsError if n is negative or past the last element
 func (q *Deque[T]) Get(n int) (T, error) {
 	var empty T
-	if n >= q.length {
+	if n < 0 || n >= q.length {
 		return empty, NotEnoughElementsError{}
 	}
 	return q.buffer[(q.first+n)%q.capacity], nil

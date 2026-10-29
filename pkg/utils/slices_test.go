@@ -368,6 +368,12 @@ func TestLowerBound(t *testing.T) {
 			expected: 0,
 		},
 		{
+			name:     "duplicates return the first match",
+			in:       []int{1, 2, 2, 2, 3},
+			value:    2,
+			expected: 1,
+		},
+		{
 			name:     "not present, lower bound out-of-range",
 			in:       buildSlice(10, 1),
 			value:    10,
