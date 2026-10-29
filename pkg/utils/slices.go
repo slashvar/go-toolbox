@@ -2,6 +2,7 @@ package utils
 
 import (
 	"cmp"
+	"slices"
 )
 
 // Map converts a slice of InType into a slice of OutType using function f
@@ -32,41 +33,39 @@ func Accumulate[InType, OutType any](f func(OutType, InType) OutType, init OutTy
 
 // ForAll returns true if f applies to all elements of s returns true
 func ForAll[T any](f func(T) bool, s []T) bool {
-	r := true
-	for i := 0; i < len(s) && r; i++ {
-		r = r && f(s[i])
+	for _, e := range s {
+		if !f(e) {
+			return false
+		}
 	}
-	return r
+	return true
 }
 
 // Exists returns true if f returns true for at least one elements of s
 func Exists[T any](f func(T) bool, s []T) bool {
-	for _, e := range s {
-		if f(e) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(s, f)
 }
 
 // Filter returns all the elements of s for which f returns true
 func Filter[T any](f func(T) bool, s []T) []T {
-	acc := func(r []T, e T) []T {
+	r := []T{}
+	for _, e := range s {
 		if f(e) {
-			return append(r, e)
+			r = append(r, e)
 		}
-		return r
 	}
-	return Accumulate(acc, []T{}, s)
+	return r
 }
 
 // OptionalFilter returns the slice made of f(e) for all e in s such that f(e).HasValue() is true
 func OptionalFilter[T1, T2 any](f func(T1) Option[T2], s []T1) []T2 {
-	acc := func(r []T2, e T1) []T2 {
-		f(e).Do(func(x T2) { r = append(r, x) })
-		return r
+	r := []T2{}
+	for _, e := range s {
+		if o := f(e); o.HasValue() {
+			r = append(r, o.Value())
+		}
 	}
-	return Accumulate(acc, []T2{}, s)
+	return r
 }
 
 // Reverse reverse elements in s
@@ -109,7 +108,7 @@ func LowerBound[T cmp.Ordered](x T, s []T) int {
 // Let p := Partition(x, s) then for all i < p s[i] < x and for all i >= p, s[i] >= x
 func Partition[T cmp.Ordered](x T, s []T) int {
 	pivot := 0
-	for i := 0; i < len(s); i++ {
+	for i := range s {
 		if s[i] < x {
 			s[i], s[pivot] = s[pivot], s[i]
 			pivot++
@@ -122,7 +121,7 @@ func Partition[T cmp.Ordered](x T, s []T) int {
 // Let p := PartitionFilter(f, s) then for all i < p, f([i]) is true and for all i >= p f(s[i]) is false
 func PartitionFilter[T any](f func(T) bool, s []T) int {
 	pivot := 0
-	for i := 0; i < len(s); i++ {
+	for i := range s {
 		if f(s[i]) {
 			s[i], s[pivot] = s[pivot], s[i]
 			pivot++
@@ -134,8 +133,9 @@ func PartitionFilter[T any](f func(T) bool, s []T) int {
 // Combine combines elements of s1 and s2 using zipper function
 // returned slice of the length of the smallest input
 func Combine[T1, T2, T3 any](s1 []T1, s2 []T2, zipper func(T1, T2) T3) []T3 {
-	var r []T3
-	for i := 0; i < len(s1) && i < len(s2); i++ {
+	n := min(len(s1), len(s2))
+	r := make([]T3, 0, n)
+	for i := range n {
 		r = append(r, zipper(s1[i], s2[i]))
 	}
 	return r

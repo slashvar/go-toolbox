@@ -51,7 +51,7 @@ func TestMap(t *testing.T) {
 }
 
 func TestIter(t *testing.T) {
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		in := buildSlice(i, 1)
 		acc := 0
 		f := func(n int) { acc += n }
@@ -61,13 +61,13 @@ func TestIter(t *testing.T) {
 }
 
 func TestAccumulate(t *testing.T) {
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		in := buildSlice(i, 1)
 		f := func(a, i int) int { return a + i }
 		r := Accumulate(f, 0, in)
 		require.Equal(t, i*(i-1)/2, r)
 	}
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		in := buildSlice(i, 1)
 		f := func(a, i int) int { return a + i }
 		r := Accumulate(f, i, in)
@@ -433,7 +433,7 @@ func TestPartition(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			p := Partition(tt.value, tt.in)
 			require.LessOrEqual(t, p, len(tt.in))
-			for i := 0; i < p; i++ {
+			for i := range p {
 				require.Less(t, tt.in[i], tt.value)
 			}
 			for i := p; i < len(tt.in); i++ {
@@ -524,7 +524,7 @@ func TestCombine(t *testing.T) {
 			r := Combine(tt.in1, tt.in2, zipper)
 			require.LessOrEqual(t, len(r), len(tt.in1))
 			require.LessOrEqual(t, len(r), len(tt.in2))
-			for i := 0; i < len(r); i++ {
+			for i := range r {
 				require.Equal(t, tt.in1[i]+tt.in2[i], r[i])
 			}
 		})
